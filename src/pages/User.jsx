@@ -1,17 +1,21 @@
-import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
+import { FaCode, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import GithubContext from '../context/github/GithubContext';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/layout/Spinner';
 
+import RepoList from '../components/repos/RepoList';
+
 function User() {
-  const { getUser, user, loading } = useContext(GithubContext);
+  const { getUser, user, loading, getUserRepos, repos } =
+    useContext(GithubContext);
 
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
+    getUserRepos(params.login);
   }, []);
 
   const {
@@ -43,6 +47,7 @@ function User() {
             Back To Search
           </Link>
         </div>
+
         <div className='grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8'>
           <div className='custom-card-image mb-6 md:mb-0'>
             <div className='rounded-lg shadow-xl card image-full'>
@@ -55,6 +60,7 @@ function User() {
               </div>
             </div>
           </div>
+
           <div className='col-span-2'>
             <div className='mb-6'>
               <h1 className='text-3xl card-title'>
@@ -76,8 +82,94 @@ function User() {
                 </a>
               </div>
             </div>
+
+            <div className='w-full rounded-lg shadow-md bg-base-100 stats'>
+              <div className='grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3'>
+                {location && (
+                  <div className='stat'>
+                    <div className='stat-title text-md'>Location</div>
+                    <div className='text-lg stat-value'>{location}</div>
+                  </div>
+                )}
+
+                {blog && (
+                  <div className='stat'>
+                    <div className='stat-title text-md'>Website</div>
+                    <div className='text-lg stat-value overflow-hidden	'>
+                      <a
+                        href={
+                          blog.startsWith('http') ? blog : `https://${blog}`
+                        }
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        {blog}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {twitter_username && (
+                  <div className='grid grid-cols-1 md:grid-cols-3'>
+                    <div className='stat'>
+                      <div className='stat-title text-md'>Twitter</div>
+                      <div className='text-lg stat-value'>
+                        <a
+                          href={`https://twitter.com/${twitter_username}`}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          {twitter_username}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
+        <div className='w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats'>
+          <div className='grid grid-cols-2 md:grid-cols-4 '>
+            <div className='stat '>
+              <div className='stat-figure text-green-600'>
+                <FaUsers className='text-3xl md:text-5xl' />
+              </div>
+              <div className='stat-title pr-5'>Followers</div>
+              <div className='stat-value pr-5 text-3xl md:text-3xl'>
+                {followers}
+              </div>
+            </div>
+            <div className='stat'>
+              <div className='stat-figure text-green-600'>
+                <FaUserFriends className='text-3xl md:text-5xl' />
+              </div>
+              <div className='stat-title pr-5'>Following</div>
+              <div className='stat-value pr-5 text-3xl md:text-3xl'>
+                {following}
+              </div>
+            </div>
+            <div className='stat'>
+              <div className='stat-figure text-green-600'>
+                <FaCode className='text-3xl md:text-5xl' />
+              </div>
+              <div className='stat-title pr-5'>Public Repos</div>
+              <div className='stat-value pr-5 text-3xl md:text-3xl'>
+                {public_repos}
+              </div>
+            </div>
+            <div className='stat'>
+              <div className='stat-figure text-green-600'>
+                <FaStore className='text-3xl md:text-5xl' />
+              </div>
+              <div className='stat-title pr-5'>Public Gists</div>
+              <div className='stat-value pr-5 text-3xl md:text-3xl'>
+                {public_gists}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <RepoList repos={repos} />
       </div>
     </>
   );
