@@ -19,7 +19,7 @@ function About() {
         Version <span className='text-white'>1.0.0</span>
       </p>
       <p className='text-lg text-gray-400'>
-        Layout By:
+        Layout Credit to
         <a className='text-white' href='https://twitter.com/hassibmoddasser'>
           Hassib Moddasser
         </a>
